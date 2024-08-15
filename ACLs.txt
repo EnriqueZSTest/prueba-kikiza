@@ -1,0 +1,130 @@
+CIA
+--------------------------------
+enable
+configure terminal
+hostname CIA
+interface gigabitEthernet0/0
+ ip address 192.168.12.1 255.255.255.0
+ no shutdown
+exit
+interface gigabitEthernet0/1
+ ip address 192.168.13.1 255.255.255.0
+ no shutdown
+exit
+interface loopback0
+ ip address 1.1.1.1 255.255.255.128
+exit
+interface loopback1
+ ip address 11.11.11.11 255.255.255.192
+exit
+interface loopback2
+ ip address 111.111.111.111 255.255.255.224
+exit
+end
+
+ACLs
+
+configure terminal
+access-list 100 deny tcp host 1.1.1.1 host 3.3.3.3 eq 80
+access-list 100 permit ip any any
+interface loopback0
+ ip access-group 100 out
+end
+
+show access-lists 100
+
+telnet 3.3.3.3 80 /source-interface 1.1.1.1
+-------------------------------------
+FBI
+---------------------------------------
+enable
+configure terminal
+hostname FBI
+interface gigabitEthernet0/0
+ ip address 192.168.12.2 255.255.255.0
+ no shutdown
+exit
+interface gigabitEthernet0/1
+ ip address 192.168.23.2 255.255.255.0
+ no shutdown
+exit
+interface loopback0
+ ip address 2.2.2.2 255.255.254.0
+exit
+interface loopback1
+ ip address 22.22.22.22 255.255.255.252
+exit
+interface loopback2
+ ip address 222.222.222.222 255.255.252.0
+exit
+
+ACLs
+
+configure terminal
+access-list 101 permit tcp host 22.22.22.22 host 33.33.33.33 eq 443
+access-list 101 deny ip any any
+interface loopback1
+ ip access-group 101 out
+
+show access-lists 101
+
+access-list 102 deny icmp host 222.222.222.222 host 33.33.33.33 echo
+access-list 102 permit ip any any
+interface loopback2
+ ip access-group 102 out
+end
+
+show access-lists 102
+
+telnet 33.33.33.33 443 /source-interface 22.22.22.22
+------------------------------------
+NSA
+------------------------------------
+enable
+configure terminal
+hostname NSA
+interface gigabitEthernet0/0
+ ip address 192.168.23.3 255.255.255.0
+ no shutdown
+exit
+interface gigabitEthernet0/1
+ ip address 192.168.13.3 255.255.255.0
+ no shutdown
+exit
+interface loopback0
+ ip address 3.3.3.3 255.255.255.240
+exit
+interface loopback1
+ ip address 33.33.33.33 255.255.255.0
+exit
+end
+
+ACLs
+
+configure terminal
+access-list 103 permit tcp host 33.33.33.33 host 1.1.1.1 eq 23
+access-list 103 deny ip any any
+interface loopback1
+ ip access-group 103 out
+end
+
+show access-lists 103
+
+telnet 1.1.1.1 /source-interface 33.33.33.33
+------------------------------
+show access-lists
+show running-config interface gigabitEthernet0/0
+show running-config interface gigabitEthernet0/1
+show running-config interface loopback0
+show running-config interface loopback1
+show running-config interface loopback2 (si aplica)
+show running-config | include hostname
+show access-lists 100
+show access-lists 101
+show access-lists 102
+show access-lists 103
+
+
+
+
+

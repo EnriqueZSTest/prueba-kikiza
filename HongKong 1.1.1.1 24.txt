@@ -1,0 +1,106 @@
+HongKong: 1.1.1.1 /24
+----------------------------
+enable
+config t
+
+interface g0/0
+ ip address 192.168.12.1 255.255.255.0
+ no shutdown
+
+interface g0/1
+ ip address 192.168.13.1 255.255.255.0
+ no shutdown
+
+interface loopback 0
+ ip address 1.1.1.1 255.255.255.0
+ ip ospf network broadcast
+
+router ospf 1
+ network 1.1.1.0 0.0.0.255 area 0
+ network 192.168.12.0 0.0.0.255 area 0
+ network 192.168.13.0 0.0.0.255 area 0
+end
+-----------------------------------------------
+ Amsterdam: 2.2.2.2 /24
+-------------------------------------
+enable
+config t
+
+interface g0/1
+ ip address 192.168.12.2 255.255.255.0
+ no shutdown
+
+interface g0/0
+ ip address 192.168.23.1 255.255.255.0
+ no shutdown
+
+interface loopback 0
+ ip address 2.2.2.2 255.255.255.0
+ ip ospf network broadcast
+
+router ospf 1
+ //router-id 2.2.2.2//
+ network 2.2.2.0 0.0.0.255 area 0
+ network 192.168.12.0 0.0.0.255 area 0
+ network 192.168.23.0 0.0.0.255 area 0
+--------------------------------------------
+router ospf 1
+router-id 22.22.22.22
+end
+
+clear ip ospf process
+
+----------------------------------------------
+ Barcelona: 3.3.3.3 /24
+-----------------------------
+enable
+config t
+
+interface g0/1
+ ip address 192.168.23.2 255.255.255.0
+ no shutdown
+
+interface g0/0
+ ip address 192.168.13.2 255.255.255.0
+ no shutdown
+
+interface loopback 0
+ ip address 3.3.3.3 255.255.255.0
+ ip ospf network broadcast
+
+router ospf 1
+ network 3.3.3.0 0.0.0.255 area 0
+ network 192.168.23.0 0.0.0.255 area 0
+ network 192.168.13.0 0.0.0.255 area 0
+--------------------------------------------------
+ interface g0/0/0
+  ip ospf cost 10
+
+ interface g0/0/1
+  ip ospf cost 20
+end
+
+interface g0/0
+  no ip ospf cost 10
+  exit
+
+interface g0/1
+  no ip ospf cost 20
+  exit
+
+---------------------------------
+interface g0/0
+ bandwidth 1000      
+interface g0/1
+ bandwidth 500       
+end
+
+show interfaces g0/0
+show interfaces g0/1
+-----------------------------------------------
+show running-config | section router ospf
+show ip ospf interface brief
+show ip interface brief
+show ip ospf neighbor
+show ip ospf database
+show ip route
